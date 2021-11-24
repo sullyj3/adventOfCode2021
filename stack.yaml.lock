@@ -31,6 +31,17 @@ packages:
     subdir: dependent-sum
     git: git@github.com:sullyj3/dependent-sum.git
     commit: 3139b19f5640b4581ffdec7f7991ef19117ab521
+- completed:
+    name: motif
+    version: 0.1.0.0
+    git: git@github.com:sullyj3/motif.git
+    pantry-tree:
+      size: 296
+      sha256: c2f9dd7344edbb6ce807619a7519a87633189a092df1cf5143ee4dbcf7cdba78
+    commit: eaa5669c2b2633575d934dffe1369c9d0196059a
+  original:
+    git: git@github.com:sullyj3/motif.git
+    commit: eaa5669c2b2633575d934dffe1369c9d0196059a
 snapshots:
 - completed:
     size: 596812

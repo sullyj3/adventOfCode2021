@@ -36,6 +36,7 @@ library
     , megaparsec
     , modular-arithmetic
     , monad-loops
+    , motif
     , mtl
     , polysemy
     , polysemy-plugin
@@ -62,6 +63,7 @@ executable adventOfCode2021-exe
     , megaparsec
     , modular-arithmetic
     , monad-loops
+    , motif
     , mtl
     , polysemy
     , polysemy-plugin
@@ -89,6 +91,7 @@ test-suite adventOfCode2021-test
     , megaparsec
     , modular-arithmetic
     , monad-loops
+    , motif
     , mtl
     , polysemy
     , polysemy-plugin

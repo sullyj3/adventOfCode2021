@@ -28,6 +28,7 @@ dependencies:
   mixin:
     - (Relude as Prelude)
     - (Relude.Lifted.Handle)
+- motif
 - vector
 - monad-loops
 - megaparsec
