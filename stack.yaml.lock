@@ -37,11 +37,11 @@ packages:
     git: git@github.com:sullyj3/motif.git
     pantry-tree:
       size: 296
-      sha256: c2f9dd7344edbb6ce807619a7519a87633189a092df1cf5143ee4dbcf7cdba78
-    commit: eaa5669c2b2633575d934dffe1369c9d0196059a
+      sha256: 85387ffb1c607ed5f20e02251d267dc316d4656be7f14314e7c7db4e3d97c397
+    commit: 989a147fc2809aa6636b8b94703b7865c1121ac0
   original:
     git: git@github.com:sullyj3/motif.git
-    commit: eaa5669c2b2633575d934dffe1369c9d0196059a
+    commit: 989a147fc2809aa6636b8b94703b7865c1121ac0
 snapshots:
 - completed:
     size: 596812
