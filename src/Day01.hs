@@ -13,7 +13,6 @@ solve input = T.unlines ["Part 1: " <> tShow p1, "Part 2: " <> tShow p2]
 numIncreases :: [Int] -> Int
 numIncreases is = case nonEmpty is of
   Nothing -> 0
-  Just (_ :| []) -> 0
   Just is' -> count id $ zipWith (<) (init is') (tail is')
 
 sliding n [] = []
