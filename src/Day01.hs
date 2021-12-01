@@ -1,17 +1,14 @@
 module Day01 where
 
-import Utils (intList)
 import Motif (count)
+import Utils (intList, tShow)
+import qualified Data.Text as T
 
-part1 :: FilePath -> IO Int
-part1 fp = do
-  Just is <- intList <$> readFileText fp
-  pure $ numIncreases is
-
-part2 :: FilePath -> IO Int
-part2 fp = do
-  Just is <- intList <$> readFileText fp
-  pure $ numIncreases . map sum . sliding 3 $ is
+solve :: Text -> Text
+solve input = T.unlines ["Part 1: " <> tShow p1, "Part 2: " <> tShow p2]
+  where Just is = intList input
+        p1 = numIncreases is
+        p2 = numIncreases . map sum . sliding 3 $ is
 
 numIncreases :: [Int] -> Int
 numIncreases is = case nonEmpty is of
@@ -20,12 +17,11 @@ numIncreases is = case nonEmpty is of
   Just is' -> count id $ zipWith (<) (init is') (tail is')
 
 sliding n [] = []
-sliding n l@(_:rest) = case maybeTake n l of
+sliding n l@(_ : rest) = case maybeTake n l of
   Just window -> window : sliding n rest
-  Nothing -> [ ]
+  Nothing -> []
 
 maybeTake :: Int -> [a] -> Maybe [a]
 maybeTake 0 xs = Just []
 maybeTake n [] = Nothing
-maybeTake n (x:xs) = (x:) <$> maybeTake (n-1) xs
-
+maybeTake n (x : xs) = (x :) <$> maybeTake (n - 1) xs

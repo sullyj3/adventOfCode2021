@@ -42,6 +42,7 @@ library
       TypeApplications
       TypeOperators
       TypeFamilies
+      OverloadedStrings
   ghc-options: -fplugin=Polysemy.Plugin -O2 -flate-specialise -fspecialise-aggressively
   build-depends:
       base >=4.7 && <5
