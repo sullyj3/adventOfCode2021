@@ -1,11 +1,11 @@
 module Day01 where
 
 import Motif (count)
-import Utils (intList, tShow)
+import Utils (intList, showSolutions)
 import qualified Data.Text as T
 
 solve :: Text -> Text
-solve input = T.unlines ["Part 1: " <> tShow p1, "Part 2: " <> tShow p2]
+solve input = showSolutions p1 p2
   where Just is = intList input
         p1 = numIncreases is
         p2 = numIncreases . map sum . sliding 3 $ is
