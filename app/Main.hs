@@ -1,8 +1,8 @@
 module Main where
 
-import Day01
+import Day02
 
 main :: IO ()
 main = do
-  putTextLn . solve =<< readFileText "inputs/day01.txt"
+  putTextLn . solve =<< readFileText "inputs/day02.txt"
 

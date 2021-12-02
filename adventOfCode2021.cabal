@@ -27,6 +27,7 @@ library
   exposed-modules:
       Utils
     , Day01
+    , Day02
   other-modules:
       Paths_adventOfCode2021
   hs-source-dirs:
@@ -43,6 +44,8 @@ library
       TypeOperators
       TypeFamilies
       OverloadedStrings
+      DerivingStrategies
+      GeneralisedNewtypeDeriving
   ghc-options: -fplugin=Polysemy.Plugin -O2 -flate-specialise -fspecialise-aggressively
   build-depends:
       base >=4.7 && <5
