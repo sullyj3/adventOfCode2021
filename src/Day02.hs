@@ -2,43 +2,58 @@
 {-# LANGUAGE GeneralisedNewtypeDeriving #-}
 module Day02 where
 
-import Utils (showSolutions, tReadMaybe)
+import Utils (showSolutions, tReadMaybe, V2(..))
 import qualified Data.Text as T
+import System.Posix.Internals (c_dup2)
 
 -- >>> parse "forward 2\ndown 1"
 -- Just [(2,0),(0,1)]
 parse :: Text -> Maybe [Step]
 parse = traverse parseStep . T.lines
 
--- we represent each step by its vector offset
-newtype Step = Step (Int, Int)
-  deriving newtype Show
+data Step = SUp Int | SDown Int | SForward Int
+  deriving Show
 
-instance Semigroup Step where
-  Step (a1, b1) <> Step (a2, b2) = Step (a1+a2, b1+b2)
+p1StepToVec :: Step -> V2
+p1StepToVec = \case
+  SForward n -> V2 n 0
+  SDown n -> V2 0 n
+  SUp n -> V2 0 (-1 * n)
 
-instance Monoid Step where
-  mempty = Step (0,0)
+-- vector addition
+instance Semigroup V2 where
+  V2 a1 b1 <> V2 a2 b2 = V2 (a1+a2) (b1+b2)
+
+instance Monoid V2 where
+  mempty = V2 0 0
 
 -- >>> parseStep "forward 5"
 -- Just (5,0)
 -- >>> parseStep "down 5"
 -- Just (0,5)
 parseStep :: Text -> Maybe Step
-parseStep t = Step <$> case T.words t of
+parseStep t = case T.words t of
   [instruction, tn] -> do
     n <- tReadMaybe tn
     case instruction of
-      "forward" -> Just (n, 0)
-      "backward" -> Just (-1 * n, 0)
-      "up" -> Just (0, -1 * n)
-      "down" -> Just (0, n)
+      "forward" -> Just $ SForward n
+      "up" -> Just $ SUp n
+      "down" -> Just $ SDown n
       _ -> Nothing
   _ -> Nothing
 
 solve :: Text -> Text
 solve input = showSolutions p1 p2
   where Just steps = parse input
-        Step (a,b) = fold steps
+        -- part 1
+        V2 a b = foldMap p1StepToVec steps
         p1 = a*b
-        p2 = ()
+        -- part 2
+
+        p2 = x*y
+        (V2 x y, _aim) = foldl' runStep (V2 0 0,0) steps
+        runStep (pos, aim) = \case
+          SUp n -> (pos, aim-n)
+          SDown n -> (pos, aim+n)
+          SForward n -> (pos <> V2 n (aim * n), aim)
+      
