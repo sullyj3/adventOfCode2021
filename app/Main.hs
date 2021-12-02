@@ -10,7 +10,7 @@ currentDay = 2
 day :: IO Int
 day = getArgs <&> \case
   [] -> currentDay
-  [ns] -> fromJust $ readMaybe ns
+  [ns] -> readMaybe ns ?: error "Expecting the argument to be a day number!"
   _ -> error "Expecting 0 or 1 arguments for the day to execute"
 
 main :: IO ()
