@@ -50,4 +50,4 @@ solve input = showSolutions p1 p2
         runStep (pos, aim) = \case
           SUp n -> (pos, aim - n)
           SDown n -> (pos, aim + n)
-          SForward n -> (pos ^+^ (V2 n (aim * n)), aim)
+          SForward n -> (pos ^+^ V2 n (aim * n), aim)
