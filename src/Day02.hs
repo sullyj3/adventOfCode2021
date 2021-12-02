@@ -7,7 +7,7 @@ import qualified Data.Text as T
 import System.Posix.Internals (c_dup2)
 
 -- >>> parse "forward 2\ndown 1"
--- Just [(2,0),(0,1)]
+-- Just [SForward 2,SDown 1]
 parse :: Text -> Maybe [Step]
 parse = traverse parseStep . T.lines
 
@@ -28,9 +28,9 @@ instance Monoid V2 where
   mempty = V2 0 0
 
 -- >>> parseStep "forward 5"
--- Just (5,0)
+-- Just (SForward 5)
 -- >>> parseStep "down 5"
--- Just (0,5)
+-- Just (SDown 5)
 parseStep :: Text -> Maybe Step
 parseStep t = case T.words t of
   [instruction, tn] -> do
