@@ -15,6 +15,7 @@ numIncreases is = case nonEmpty is of
   Nothing -> 0
   Just is' -> count id $ zipWith (<) (init is') (tail is')
 
+sliding :: Int -> [a] -> [[a]]
 sliding n [] = []
 sliding n l@(_ : rest) = case maybeTake n l of
   Just window -> window : sliding n rest
