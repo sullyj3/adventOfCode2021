@@ -8,6 +8,9 @@ solve :: Text -> Text
 solve input = showSolutions p1 p2
   where Just is = intList input
         p1 = numLt is (drop 1 is)
+
+        -- a + b + c < b + c + d <=> a < d
+        -- so we don't need the sliding window
         p2 = numLt is (drop 3 is)
 
 numLt :: [Int] -> [Int] -> Int
