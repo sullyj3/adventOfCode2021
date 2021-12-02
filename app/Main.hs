@@ -2,7 +2,6 @@ module Main where
 
 import qualified Day01
 import qualified Day02
-import Data.Maybe (fromJust)
 
 currentDay :: Int
 currentDay = 2
