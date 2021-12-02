@@ -1,8 +1,8 @@
 module Day02 where
 
 import qualified Data.Text as T
-import Linear.V2
-import Linear.Vector
+import Linear.V2 ( V2(..) )
+import Linear.Vector ( Additive((^+^)) )
 import Utils (showSolutions, tReadMaybe)
 
 data Step = SUp Int | SDown Int | SForward Int
