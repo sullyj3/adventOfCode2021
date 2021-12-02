@@ -1,5 +1,3 @@
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE GeneralisedNewtypeDeriving #-}
 module Day02 where
 
 import Utils (showSolutions, tReadMaybe, V2(..))
