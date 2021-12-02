@@ -46,10 +46,12 @@ library
       OverloadedStrings
       DerivingStrategies
       GeneralisedNewtypeDeriving
+      BlockArguments
   ghc-options: -fplugin=Polysemy.Plugin -O2 -flate-specialise -fspecialise-aggressively
   build-depends:
       base >=4.7 && <5
     , flow
+    , linear
     , megaparsec
     , modular-arithmetic
     , monad-loops

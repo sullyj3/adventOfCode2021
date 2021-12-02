@@ -2,9 +2,6 @@ module Utils where
 
 import qualified Data.Text as T
 
-data V2 = V2 Int Int
-  deriving Show
-
 intList :: Text -> Maybe [Int]
 intList = traverse (readMaybe . T.unpack) . T.lines
 
