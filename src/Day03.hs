@@ -9,7 +9,7 @@ import qualified Data.Vector.Storable as Vec
 import Motif (count)
 import Numeric.LinearAlgebra.Data (I, Vector)
 import qualified Relude.Unsafe as Unsafe
-import Utils
+import Utils (binaryLines, showSolutions)
 
 -- least significant bit first
 -- >>> bitsAsInts 0b101
