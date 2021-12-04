@@ -28,6 +28,7 @@ library
       Utils
     , Day01
     , Day02
+    , Day03
   other-modules:
       Paths_adventOfCode2021
   hs-source-dirs:
@@ -47,10 +48,11 @@ library
       DerivingStrategies
       GeneralisedNewtypeDeriving
       BlockArguments
-  ghc-options: -fplugin=Polysemy.Plugin -O2 -flate-specialise -fspecialise-aggressively
+  ghc-options: -fplugin=Polysemy.Plugin -O2 -flate-specialise -fspecialise-aggressively -Wall
   build-depends:
       base >=4.7 && <5
     , flow
+    , hmatrix
     , linear
     , megaparsec
     , modular-arithmetic

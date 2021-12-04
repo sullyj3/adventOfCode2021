@@ -1,9 +1,28 @@
 module Utils where
 
 import qualified Data.Text as T
+import Numeric
+import Data.Char (digitToInt)
 
 intList :: Text -> Maybe [Int]
 intList = traverse (readMaybe . T.unpack) . T.lines
+
+-- >>> parseBinary "1010" :: Maybe Word8
+-- Just 10
+-- >>> parseBinary "11111" :: Maybe Word8
+-- Just 31
+parseBinary :: (Eq a, Num a) => Text -> Maybe a
+parseBinary t = 
+  case readInt 2 (`elem` binDigits) digitToInt (T.unpack t) of
+    [(n,_)] -> Just n
+    _ -> Nothing 
+  where binDigits :: [Char]
+        binDigits = ['0', '1']
+
+-- >>> binaryLines "101\n001"
+-- Just [5,1]
+binaryLines :: Text -> Maybe [Word32]
+binaryLines = traverse parseBinary . T.lines
 
 tShow :: Show a => a -> Text
 tShow = T.pack . show

@@ -2,12 +2,13 @@ module Main where
 
 import qualified Day01
 import qualified Day02
+import qualified Day03
 
 currentDay :: Int
-currentDay = 2
+currentDay = 3
 
-day :: IO Int
-day =
+getDay :: IO Int
+getDay =
   getArgs <&> \case
     [] -> currentDay
     [ns] -> readMaybe ns ?: error "Expecting the argument to be a day number!"
@@ -15,9 +16,11 @@ day =
 
 main :: IO ()
 main = do
-  (solve, input) <-
-    day
-      <&> \case
+  day <- getDay
+  let (solve, input) = case day of
         1 -> (Day01.solve, "day01.txt")
         2 -> (Day02.solve, "day02.txt")
+        3 -> (Day03.solve, "day03.txt")
+  putTextLn $ "Day " <> show day <> ":"
   putTextLn . solve =<< readFileText ("inputs/" ++ input)
+
