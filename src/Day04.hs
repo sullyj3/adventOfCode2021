@@ -17,17 +17,18 @@ parseInput :: Parser ([Int], [Board])
 parseInput = do
   drawnNumbers <- decimal `sepBy` single ','
   space
-  boards <- parseBoard `sepEndBy1` newline
+  boards <- parseBoard `sepEndBy1` space
   eof
   pure (drawnNumbers, boards)
 
 parseBoard :: Parser Board
 parseBoard = do
-  rows <- replicateM 5 parseRow
-  pure $ MSV.fromLists' MSV.Seq rows
+  row1 <- parseRow
+  rows <- replicateM 4 (newline *> parseRow)
+  pure $ MSV.fromLists' MSV.Seq (row1:rows) 
 
 parseRow :: Parser [Int]
-parseRow = replicateM 5 (space *> decimal) <* newline
+parseRow = replicateM 5 (space *> decimal)
 
 solve :: Text -> Text
 solve input = showSolutions drawnNumbers boards
