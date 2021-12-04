@@ -1,6 +1,5 @@
 module Day01 where
 
-import qualified Data.Text as T
 import Motif (count)
 import Utils (intList, showSolutions)
 

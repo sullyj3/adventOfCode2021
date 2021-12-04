@@ -2,7 +2,7 @@ module Utils where
 
 import qualified Data.Text as T
 import Numeric
-import Data.Char (digitToInt)
+import Data.Char (digitToInt, intToDigit)
 
 intList :: Text -> Maybe [Int]
 intList = traverse (readMaybe . T.unpack) . T.lines
@@ -23,6 +23,9 @@ parseBinary t =
 -- Just [5,1]
 binaryLines :: Text -> Maybe [Word32]
 binaryLines = traverse parseBinary . T.lines
+
+showBin :: (Integral a, Show a) => a -> Text
+showBin n = T.pack $ showIntAtBase 2 intToDigit n ""
 
 tShow :: Show a => a -> Text
 tShow = T.pack . show
