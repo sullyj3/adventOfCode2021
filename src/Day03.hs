@@ -6,10 +6,10 @@ module Day03 where
 import Data.Bits (Bits (complement, setBit, testBit, (.&.)))
 import qualified Data.Text as T
 import qualified Data.Vector.Storable as Vec
+import Motif (count)
 import Numeric.LinearAlgebra.Data (I, Vector)
 import qualified Relude.Unsafe as Unsafe
-import Utils 
-import Motif (count)
+import Utils
 
 -- least significant bit first
 -- >>> bitsAsInts 0b101
@@ -45,26 +45,6 @@ calculateGamma bitLength is =
     isMostCommonBit :: I -> Bool
     isMostCommonBit cnt = cnt > (len `div` 2)
 
-
-solve :: Text -> Text
-solve input = showSolutions p1 p2
-  where
-    Just is = binaryLines input
-
-    bitLength :: Int
-    bitLength = T.length . Unsafe.head . T.lines $ input
-
-    gamma = calculateGamma bitLength is
-    -- we mask to ensure irrelevant high bits are not set by complement
-    nOnes n = 2 ^ n - 1
-    mask = nOnes bitLength
-    epsilon = complement gamma .&. mask
-    p1 = gamma * epsilon
-
-    oxygenRating = calculateRating bitLength Oxygen is
-    co2Rating = calculateRating bitLength CO2 is
-    p2 = oxygenRating * co2Rating
-
 exampleReport :: [Word32]
 exampleReport =
   [ 0b00100,
@@ -91,29 +71,50 @@ data RatingType = Oxygen | CO2
 calculateRating :: Int -> RatingType -> [Word32] -> Word32
 calculateRating bitLength ratingType is = final
   where
-    Just final = evalState (elimination (elimByBitCriteria ratingType) is) 
-                           (bitLength-1)
+    Just final =
+      evalState
+        (elimination (elimByBitCriteria ratingType) is)
+        (bitLength - 1)
 
 elimByBitCriteria :: RatingType -> [Word32] -> State Int [Word32]
 elimByBitCriteria ratingType candidates = do
   bitIndex <- get
   let ones = count (`testBit` bitIndex) candidates
       zeros = length candidates - ones
-      theBit = case ratingType of 
-                Oxygen -> ones >= zeros
-                CO2    -> ones <  zeros
-      remaining = filter ((==theBit) . (`testBit` bitIndex)) candidates
+      theBit = case ratingType of
+        Oxygen -> ones >= zeros
+        CO2 -> ones < zeros
+      remaining = filter ((== theBit) . (`testBit` bitIndex)) candidates
   put $ bitIndex - 1
   pure remaining
 
--- iteratively pare down a list of candidates, returning the final candidate, 
+-- iteratively pare down a list of candidates, returning the final candidate,
 -- if it exists
 elimination :: Monad m => ([a] -> m [a]) -> [a] -> m (Maybe a)
-elimination eliminateFrom = loop where
-  loop = \case
-    [] -> pure Nothing
-    [x] -> pure (Just x)
-    remaining -> do
-      remaining' <- eliminateFrom remaining
-      loop remaining'
-  
+elimination eliminateFrom = loop
+  where
+    loop = \case
+      [] -> pure Nothing
+      [x] -> pure (Just x)
+      remaining -> do
+        remaining' <- eliminateFrom remaining
+        loop remaining'
+
+solve :: Text -> Text
+solve input = showSolutions p1 p2
+  where
+    Just is = binaryLines input
+
+    bitLength :: Int
+    bitLength = T.length . Unsafe.head . T.lines $ input
+
+    gamma = calculateGamma bitLength is
+    -- we mask to ensure irrelevant high bits are not set by complement
+    nOnes n = 2 ^ n - 1
+    mask = nOnes bitLength
+    epsilon = complement gamma .&. mask
+    p1 = gamma * epsilon
+
+    oxygenRating = calculateRating bitLength Oxygen is
+    co2Rating = calculateRating bitLength CO2 is
+    p2 = oxygenRating * co2Rating
