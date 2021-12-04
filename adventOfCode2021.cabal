@@ -29,6 +29,7 @@ library
     , Day01
     , Day02
     , Day03
+    , Day04
   other-modules:
       Paths_adventOfCode2021
   hs-source-dirs:
@@ -54,7 +55,7 @@ library
     , flow
     , hmatrix
     , linear
-    , megaparsec
+    , megaparsec >=9.2 && < 10
     , modular-arithmetic
     , monad-loops
     , motif
