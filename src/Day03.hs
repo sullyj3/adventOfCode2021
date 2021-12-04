@@ -45,27 +45,6 @@ calculateGamma bitLength is =
     isMostCommonBit :: I -> Bool
     isMostCommonBit cnt = cnt > (len `div` 2)
 
--- >>> length exampleReport
--- >>> bitCounts 5 exampleReport
--- >>> showBin $ oxygenMostCommonBits 5 exampleReport
--- 12
--- [5,7,8,5,7]
--- "10110"
-oxygenMostCommonBits :: Int -> [Word32] -> Word32
-oxygenMostCommonBits bitLength is = 
-  boolVecToBitsLE . Vec.map decideBit . bitCounts bitLength $ is
-  where
-    len = fromIntegral $ length is
-
-    decideBit :: I -> Bool
-    decideBit numOnes = case compare numOnes (len `div` 2) of
-      LT -> False
-      EQ -> True
-      GT -> True
-
--- len = 12
--- Vec.map decideBit [5,7,8,5,7]
--- [False, True, True, False, True]
 
 solve :: Text -> Text
 solve input = showSolutions p1 p2
@@ -82,7 +61,9 @@ solve input = showSolutions p1 p2
     epsilon = complement gamma .&. mask
     p1 = gamma * epsilon
 
-    p2 = calculateRating bitLength Oxygen is * calculateRating bitLength CO2 is
+    oxygenRating = calculateRating bitLength Oxygen is
+    co2Rating = calculateRating bitLength CO2 is
+    p2 = oxygenRating * co2Rating
 
 exampleReport :: [Word32]
 exampleReport =
