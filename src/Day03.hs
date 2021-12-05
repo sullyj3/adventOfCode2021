@@ -9,7 +9,7 @@ import qualified Data.Vector.Storable as Vec
 import Motif (count)
 import Numeric.LinearAlgebra.Data (I, Vector)
 import qualified Relude.Unsafe as Unsafe
-import Utils (binaryLines, showSolutions)
+import Utils (binaryLines, showSolutions, elimination)
 
 -- least significant bit first
 -- >>> bitsAsInts 0b101
@@ -87,18 +87,6 @@ elimByBitCriteria ratingType candidates = do
       remaining = filter ((== theBit) . (`testBit` bitIndex)) candidates
   put $ bitIndex - 1
   pure remaining
-
--- iteratively pare down a list of candidates, returning the final candidate,
--- if it exists
-elimination :: Monad m => ([a] -> m [a]) -> [a] -> m (Maybe a)
-elimination eliminateFrom = loop
-  where
-    loop = \case
-      [] -> pure Nothing
-      [x] -> pure (Just x)
-      remaining -> do
-        remaining' <- eliminateFrom remaining
-        loop remaining'
 
 solve :: Text -> Text
 solve input = showSolutions p1 p2

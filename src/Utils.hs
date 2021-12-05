@@ -36,3 +36,16 @@ tReadMaybe = readMaybe . T.unpack
 showSolutions :: (Show a, Show b) => a -> b -> Text
 showSolutions p1 p2 =
   T.unlines ["Part 1: " <> tShow p1, "Part 2: " <> tShow p2]
+
+-- iteratively pare down a list of candidates, returning the final candidate,
+-- if it exists
+elimination :: Monad m => ([a] -> m [a]) -> [a] -> m (Maybe a)
+elimination eliminateFrom = loop
+  where
+    loop = \case
+      [] -> pure Nothing
+      [x] -> pure (Just x)
+      remaining -> do
+        remaining' <- eliminateFrom remaining
+        loop remaining'
+
