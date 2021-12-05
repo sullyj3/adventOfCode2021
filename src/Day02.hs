@@ -1,31 +1,26 @@
 module Day02 where
 
-import qualified Data.Text as T
 import Linear.V2 ( V2(..) )
-import Utils (showSolutions, tReadMaybe)
+import Utils (showSolutions)
+import Text.Megaparsec
+import Text.Megaparsec.Char (newline, string, space)
+import Text.Megaparsec.Char.Lexer (decimal)
 
 data Step = SUp Int | SDown Int | SForward Int
   deriving (Show)
 
--- >>> parse "forward 2\ndown 1"
--- Just [SForward 2,SDown 1]
-parse :: Text -> Maybe [Step]
-parse = traverse parseStep . T.lines
+type Parser = Parsec Void Text
 
--- >>> parseStep "forward 5"
--- Just (SForward 5)
--- >>> parseStep "down 5"
--- Just (SDown 5)
-parseStep :: Text -> Maybe Step
-parseStep t = case T.words t of
-  [instruction, tn] -> do
-    n <- tReadMaybe tn
-    case instruction of
-      "forward" -> Just $ SForward n
-      "up" -> Just $ SUp n
-      "down" -> Just $ SDown n
-      _ -> Nothing
-  _ -> Nothing
+parseInput :: Parser [Step]
+parseInput = step `sepEndBy` newline
+
+step :: Parser Step
+step = do
+  steptype <- try (SForward <$ string "forward") <|>
+              try (SUp      <$ string "up)" <|>
+                   SDown    <$ string "down" ) 
+  space
+  steptype <$> decimal
 
 p1StepToVec :: Step -> V2 Int
 p1StepToVec = \case
@@ -36,7 +31,7 @@ p1StepToVec = \case
 solve :: Text -> Text
 solve input = showSolutions p1 p2
   where
-    Just steps = parse input
+    Just steps = parseMaybe parseInput input
     -- part 1
     Sum (V2 a b) = foldMap (Sum . p1StepToVec) steps
     p1 = a * b
