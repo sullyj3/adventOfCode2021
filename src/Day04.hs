@@ -1,9 +1,9 @@
 {-# language ImportQualifiedPost #-}
 
 module Day04 where
-import Text.Megaparsec
+import Text.Megaparsec hiding (State)
 import Text.Megaparsec.Char (newline, space)
-import Utils (showSolutions)
+import Utils (showSolutions, elimination)
 import Text.Megaparsec.Char.Lexer (decimal)
 import Prelude hiding (many)
 import Control.Monad (foldM)
@@ -59,18 +59,21 @@ solve input = showSolutions finalScore p2
 type Score = Int
 
 crossOutOnAllBoards :: [Board (Maybe Int)] -> Int -> Either Score [Board (Maybe Int)]
-crossOutOnAllBoards boards' drawn = traverse (crossOut drawn) boards'
+crossOutOnAllBoards boards' drawn = traverse (crossOutMaybeWin drawn) boards'
 
-crossOut :: Int -> Board (Maybe Int) -> Either Score (Board (Maybe Int))
-crossOut lastCalled board
+crossOutMaybeWin :: Int -> Board (Maybe Int) -> Either Score (Board (Maybe Int))
+crossOutMaybeWin lastCalled board
   | isWin replaced = Left finalScore
   | otherwise = Right replaced
+  where replaced = crossOut lastCalled board
+        finalScore = lastCalled * (sum . concatMap catMaybes $ replaced)
+
+crossOut :: Int -> Board (Maybe Int) -> Board (Maybe Int)
+crossOut lastCalled board = replaced
   where replaced = map (map replaceCalled) board
         replaceCalled = \case
           Just n | n == lastCalled -> Nothing
           x -> x
-
-        finalScore = lastCalled * (sum . concatMap catMaybes $ replaced)
 
 
 -- >>> isWin $ replicate 5 [Right 1, Left 2, Right 1, Right 1, Right 1]
@@ -78,3 +81,23 @@ isWin :: Board (Maybe Int) -> Bool
 isWin rows = rowWin || colWin
   where rowWin = any (all isNothing) rows
         colWin = any (all isNothing) (transpose rows)
+
+part2 :: [Int] -> [Board (Maybe Int)] -> Score
+part2 drawnNumbers boards = let
+  remainingNumbers :: [Int]
+  lastBoard :: Board (Maybe Int)
+  (Just lastBoard, remainingNumbers) = 
+    runState (elimination eliminateWinners boards)
+             drawnNumbers
+  in undefined
+
+eliminateWinners :: [Board (Maybe Int)] -> State [Int] [Board (Maybe Int)]
+eliminateWinners boards = do
+  remainingToCall <- get
+  case uncons remainingToCall of
+    Just (n, rest) -> undefined
+    Nothing -> 
+      error "No numbers left to call, and there is more than one board remaining!"
+
+  -- foldr f
+  undefined
