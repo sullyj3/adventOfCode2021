@@ -57,9 +57,6 @@ instance Semigroup PointCounter where
 instance Monoid PointCounter where
   mempty = PC mempty
 
-pcSingleton :: V2 Int -> PointCounter
-pcSingleton v = PC $ Map.singleton v 1
-
 -- >>> ventPoints (Vent (V2 1 0) (V2 1 5))
 -- [V2 1 0,V2 1 1,V2 1 2,V2 1 3,V2 1 4,V2 1 5]
 -- >>> ventPoints (Vent (V2 0 0) (V2 0 9))
@@ -91,10 +88,7 @@ ventPoints (Vent u v)
 -- PC (fromList [(V2 1 0,Sum {getSum = 1}),(V2 1 1,Sum {getSum = 1}),(V2 1 2,Sum {getSum = 1}),(V2 1 3,Sum {getSum = 1}),(V2 1 4,Sum {getSum = 1}),(V2 1 5,Sum {getSum = 1})])
 -- PC (fromList [(V2 0 0,Sum {getSum = 1}),(V2 0 1,Sum {getSum = 1}),(V2 0 2,Sum {getSum = 1}),(V2 0 3,Sum {getSum = 1}),(V2 0 4,Sum {getSum = 1}),(V2 0 5,Sum {getSum = 1}),(V2 0 6,Sum {getSum = 1}),(V2 0 7,Sum {getSum = 1}),(V2 0 8,Sum {getSum = 1}),(V2 0 9,Sum {getSum = 1})])
 ventPointCounts :: Vent -> PointCounter
-ventPointCounts = foldMap pcSingleton . ventPoints
-
--- >>> pcSingleton (V2 1 1) <> pcSingleton (V2 1 1)
--- PC (fromList [(V2 1 1,Sum {getSum = 2})])
+ventPointCounts = PC . Map.fromAscList . (`zip` repeat 1) . ventPoints
 
 testInput :: IO Text
 testInput = do
