@@ -2,7 +2,6 @@ module Day02 where
 
 import qualified Data.Text as T
 import Linear.V2 ( V2(..) )
-import Linear.Vector ( Additive((^+^)) )
 import Utils (showSolutions, tReadMaybe)
 
 data Step = SUp Int | SDown Int | SForward Int
@@ -50,4 +49,4 @@ solve input = showSolutions p1 p2
         runStep (pos, aim) = \case
           SUp n -> (pos, aim - n)
           SDown n -> (pos, aim + n)
-          SForward n -> (pos ^+^ V2 n (aim * n), aim)
+          SForward n -> (pos + V2 n (aim * n), aim)
