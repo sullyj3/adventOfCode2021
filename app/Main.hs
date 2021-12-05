@@ -4,9 +4,10 @@ import qualified Day01
 import qualified Day02
 import qualified Day03
 import qualified Day04
+import qualified Day05
 
 currentDay :: Int
-currentDay = 4
+currentDay = 5
 
 getDay :: IO Int
 getDay =
@@ -23,6 +24,7 @@ main = do
         2 -> (Day02.solve, "day02.txt")
         3 -> (Day03.solve, "day03.txt")
         4 -> (Day04.solve, "day04.txt")
+        5 -> (Day05.solve, "day05.txt")
   putTextLn $ "Day " <> show day <> ":"
   putTextLn . solve =<< readFileText ("inputs/" ++ input)
 
