@@ -8,6 +8,7 @@ import Text.Megaparsec.Char.Lexer (decimal)
 import Prelude hiding (many)
 import Control.Monad (foldM)
 import Data.List (partition)
+import Motif (replace)
 
 type Board a = [[a]]
 
@@ -72,10 +73,7 @@ crossOutMaybeWin lastCalled board
 
 crossOut :: Int -> Board (Maybe Int) -> Board (Maybe Int)
 crossOut lastCalled board = replaced
-  where replaced = map (map replaceCalled) board
-        replaceCalled = \case
-          Just n | n == lastCalled -> Nothing
-          x -> x
+  where replaced = map (replace (Just lastCalled) Nothing) board
 
 -- >>> isWin $ replicate 5 [Right 1, Left 2, Right 1, Right 1, Right 1]
 isWin :: Board (Maybe Int) -> Bool

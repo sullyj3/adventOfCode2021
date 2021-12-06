@@ -14,7 +14,7 @@ source-repository-package
 source-repository-package
     type: git
     location: git@github.com:sullyj3/motif.git
-    tag: 989a147fc2809aa6636b8b94703b7865c1121ac0
+    tag: 9f24b42d0659c6f39042f0f36371e9147c2ac76e
 
 allow-older: *
 allow-newer: *
