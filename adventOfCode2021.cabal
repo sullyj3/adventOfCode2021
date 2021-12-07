@@ -65,6 +65,7 @@ library
     , monad-loops
     , motif
     , mtl
+    , multiset
     , polysemy
     , polysemy-plugin
     , relude
