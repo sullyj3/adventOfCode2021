@@ -6,20 +6,17 @@ import qualified Day03
 import qualified Day04
 import qualified Day05
 import qualified Day06
-import Data.List ((!!))
+import Data.List ((!!), last)
 
-currentDay :: Int
-currentDay = 6
+data ToRun = Days [Int] | AllDays | Latest
 
 parseArgs :: IO ToRun
 parseArgs =
   getArgs <&> \case
-    [] -> Days [currentDay]
+    [] -> Latest
     ["all"] -> AllDays
     ns -> Days $ 
       traverse readMaybe ns ?: error "Expecting the argument to be a day number, or 'all'!"
-
-data ToRun = Days [Int] | AllDays
 
 main :: IO ()
 main = do
@@ -35,6 +32,7 @@ main = do
       daysToRun = case toRun of
         AllDays -> [1..] `zip` days
         Days ns -> map (\dayNum -> (dayNum, days !! (dayNum - 1))) ns
+        Latest -> [Data.List.last $ [1..] `zip` days]
 
   for_ daysToRun $ \(day, (solve, inputFP)) -> do
     putTextLn $ "Day " <> show day <> ":"
