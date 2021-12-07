@@ -16,7 +16,7 @@ parseInput = step `sepEndBy` newline
 step :: Parser Step
 step = do
   steptype <- try (SForward <$ string "forward") <|>
-              try (SUp      <$ string "up)" <|>
+              try (SUp      <$ string "up" <|>
                    SDown    <$ string "down" ) 
   space
   steptype <$> decimal
