@@ -1,6 +1,7 @@
 module Day0X where
 
 import Utils (showSolutions)
+import Text.Megaparsec
 import Parsing
 
 parseInput :: Parser ()
