@@ -48,4 +48,3 @@ elimination eliminateFrom = loop
       remaining -> do
         remaining' <- eliminateFrom remaining
         loop remaining'
-
