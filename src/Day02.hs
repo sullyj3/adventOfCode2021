@@ -5,11 +5,10 @@ import Utils (showSolutions)
 import Text.Megaparsec
 import Text.Megaparsec.Char (newline, string, space)
 import Text.Megaparsec.Char.Lexer (decimal)
+import Parsing
 
 data Step = SUp Int | SDown Int | SForward Int
   deriving (Show)
-
-type Parser = Parsec Void Text
 
 parseInput :: Parser [Step]
 parseInput = step `sepEndBy` newline

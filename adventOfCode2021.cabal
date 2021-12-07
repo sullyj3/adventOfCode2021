@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Utils
+    , Parsing
     , Day01
     , Day02
     , Day03
@@ -37,7 +38,7 @@ library
   hs-source-dirs:
       src
   default-extensions:
-			ImportQualifiedPost
+      ImportQualifiedPost
       DataKinds
       FlexibleContexts
       GADTs

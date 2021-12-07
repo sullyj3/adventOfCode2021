@@ -4,19 +4,17 @@ import Data.Map qualified as Map
 import Linear.V2 (V2 (..))
 import Text.Megaparsec
   ( MonadParsec (eof),
-    Parsec,
     parseMaybe,
     sepEndBy1,
     single,
   )
 import Text.Megaparsec.Char (newline, string)
 import Text.Megaparsec.Char.Lexer (decimal)
+import Parsing
 import Utils (showSolutions)
 
 data Vent = Vent (V2 Int) (V2 Int)
   deriving (Show)
-
-type Parser = Parsec Void Text
 
 v2 :: Parser (V2 Int)
 v2 = V2 <$> (decimal <* single ',') <*> decimal

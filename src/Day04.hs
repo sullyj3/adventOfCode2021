@@ -9,33 +9,18 @@ import Prelude hiding (many)
 import Control.Monad (foldM)
 import Data.List (partition)
 import Motif (replace)
+import Parsing
 
 type Board a = [[a]]
 
-type Parser = Parsec Void Text
-
 parseInput :: Parser ([Int], [Board Int])
 parseInput = do
-  drawnNumbers <- decimal `sepBy` single ','
+  drawnNumbers <- commaSeparatedInts
   space
   boards <- parseBoard `sepEndBy1` space
   eof
   pure (drawnNumbers, boards)
 
-{-
-debugging
-
-printBoard :: (Show a) => [[a]] -> IO ()
-printBoard b = traverse_ print b *> putStrLn ""
-
-printBoards = traverse_ printBoard
-
-exampleInput :: IO ([Int], [Board (Maybe Int)])
-exampleInput = do
-  t <- readFileText "inputs/day04example.txt"
-  let Just (ns, boards) = parseMaybe parseInput t
-  pure (ns, (map . map . map) Just boards)
--}
 
 parseBoard :: Parser (Board Int)
 parseBoard = do
