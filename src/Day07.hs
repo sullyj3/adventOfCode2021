@@ -2,8 +2,8 @@ module Day07 where
 
 import Data.List (maximum, minimum, (!!))
 import Data.Semigroup (Arg (Arg))
-import Parsing
-import Text.Megaparsec
+import Parsing (Parser, commaSeparatedInts)
+import Text.Megaparsec (MonadParsec (eof), parseMaybe)
 import Text.Megaparsec.Char (space)
 import Utils (showSolutions)
 
@@ -20,29 +20,23 @@ solve input = showSolutions p1 p2
 median :: Ord a => [a] -> a
 median ns = sort ns !! (length ns `div` 2)
 
-part1 :: [Int] -> Int
-part1 crabs = sum [abs (crab - med) | crab <- crabs]
-  where
-    med = median crabs
-
+mean :: [Int] -> Int
+mean ns = sum ns `div` length ns
+--
 -- >>> map tri [0..10]
 -- [0,1,3,6,10,15,21,28,36,45,55]
 tri :: Int -> Int
 tri n = n * (n + 1) `div` 2
 
--- >>> argMin (\x -> x * x) [-10..10]
--- 0
--- >>> argMin id [-10..10]
--- -10
-argMin :: Ord b => (a -> b) -> [a] -> a
-argMin f candidates = theMin
+part1 :: [Int] -> Int
+part1 crabs = sum [abs (crab - target) | crab <- crabs]
   where
-    Arg _ theMin = minimum [Arg (f x) x | x <- candidates]
+    target = median crabs
 
 part2 :: [Int] -> Int
-part2 crabs = totalFuelCost
+part2 crabs = sum [movementCost target crab | crab <- crabs]
   where
-    totalFuelCost = sum [movementCost target crab | crab <- crabs]
-    (left, right) = (minimum crabs, maximum crabs)
-    target = argMin (\pos -> sum [movementCost pos crab | crab <- crabs]) [left .. right]
+    target = mean crabs
     movementCost pos crab = tri (abs $ pos - crab)
+
+
