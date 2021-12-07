@@ -1,12 +1,11 @@
 module Day07 where
 
-import Data.List (maximum, minimum, (!!))
-import Data.Semigroup (Arg (Arg))
+import Data.List ((!!))
+import Linear.V2 (V2 (..))
 import Parsing (Parser, commaSeparatedInts)
 import Text.Megaparsec (MonadParsec (eof), parseMaybe)
 import Text.Megaparsec.Char (space)
 import Utils (showSolutions)
-import Linear.V2 (V2(..))
 
 parseInput :: Parser [Int]
 parseInput = commaSeparatedInts <* space <* eof
@@ -15,11 +14,15 @@ solve :: Text -> Text
 solve input = showSolutions p1 p2
   where
     Just crabs = parseMaybe parseInput input
+    V2 p1 p2 =
+      sum
+        [ V2
+            (movementCostp1 crab)
+            (movementCostp2 crab)
+          | crab <- crabs
+        ]
 
-    V2 p1 p2 = sum [ V2 (movementCostp1 crab)
-                        (movementCostp2 crab) | crab <- crabs ]
-
-    movementCostp1 crab =       abs $ crab - targetp1
+    movementCostp1 crab = abs $ crab - targetp1
     movementCostp2 crab = tri . abs $ crab - targetp2
 
     targetp1 = median crabs
