@@ -7,7 +7,6 @@ import Data.IntMultiSet qualified as IMS
 import Data.IntMultiSet (IntMultiSet)
 
 import Parsing
-import Data.List ((!!))
 import Utils
 
 type FishCounter = IntMultiSet
@@ -18,8 +17,8 @@ parseInput = IMS.fromList <$> commaSeparatedInts <* space <* eof
 solve :: Text -> Text
 solve input = showSolutions p1 p2
   where Just initialCounts = parseMaybe parseInput input
-        p1 = IMS.size $ iterate elapseDay initialCounts !! 80
-        p2 = IMS.size $ iterate elapseDay initialCounts !! 256
+        [p1,p2] = IMS.size <$>
+          selectIndices [80,256] (iterate elapseDay initialCounts)
 
 elapseDay :: FishCounter -> FishCounter
 elapseDay = IMS.concatMap \case

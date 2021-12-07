@@ -12,10 +12,10 @@ intList = traverse (readMaybe . T.unpack) . T.lines
 -- >>> parseBinary "11111" :: Maybe Word8
 -- Just 31
 parseBinary :: (Eq a, Num a) => Text -> Maybe a
-parseBinary t = 
+parseBinary t =
   case readInt 2 (`elem` binDigits) digitToInt (T.unpack t) of
     [(n,_)] -> Just n
-    _ -> Nothing 
+    _ -> Nothing
   where binDigits :: [Char]
         binDigits = ['0', '1']
 
@@ -48,3 +48,13 @@ elimination eliminateFrom = loop
       remaining -> do
         remaining' <- eliminateFrom remaining
         loop remaining'
+
+-- assume indices are sorted
+selectIndices :: [Int] -> [a] -> [a]
+selectIndices = go 0
+  where go _ [] _ = []
+        go i (idx:idxs) (x:xs)
+          | i == idx  = x : go (i+1) idxs xs
+          | otherwise = go (i+1) (idx:idxs) xs
+        go _ _ [] = error "list doesn't contain all of the indices."
+        
