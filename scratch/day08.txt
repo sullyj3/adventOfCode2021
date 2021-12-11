@@ -1,0 +1,149 @@
+acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab |
+cdfeb fcadb cdfeb cdbaf
+
+----------------------------------------------------
+possibilities | n_segments  | signal  | translation
+--------------|-------------|---------|-------------
+8             | 7						| acedgfb | ???a???
+2 3 5         | 5						| cdfbe   | ?a???
+2 3 5         | 5						| gcdfa   | ??a??
+2 3 5         | 5						| fbcad   | ????a
+7             | 3						| dab     | a??
+0 6 9         | 6						| cefabd  | ?????a
+0 6 9         | 6						| cdfgeb  | ?a????
+4             | 4						| eafb    | ????
+0 6 9         | 6						| cagedb  | ????a?
+1             | 2						| ab      | ??
+
+<encoded character> -> {<set of remaining possibilities>}
+
+from 1: deduce
+a -> {c, f}
+b -> {c, f}
+
+from 4: deduce
+e -> {b, c, d, f}
+a -> {b, c, d, f} 
+		 but intersecting with above gives
+		 {c,f}
+f -> {b, c, d, f}
+b -> {b, c, d, f}
+		 but intersecting with above gives
+		 {c,f}
+
+from 7: deduce
+d -> {a, c, f}
+a -> {a, c, f}
+		 but intersecting with above gives
+		 {c,f}
+b -> {a, c, f}
+		 but intersecting with above gives
+		 {c,f}
+
+8 useless, since it covers all segments
+
+2,3,5 useless for now, since they collectively cover all segments
+
+0,6,9 useless for now, since they collectively cover all segments
+
+that's all the numbers. what next?
+
+we currently have
+
+a -> {c,f}
+b -> {c,f}
+c -> {a,b,c,d,e,f,g} (no info)
+d -> {a,c,f}
+e -> {b,c,d,f}
+f -> {b,c,d,f}
+g -> {a,b,c,d,e,f,g} (no info)
+
+a,b are a {c,f} pair, therefore no other letters can be c,f
+
+a -> {c,f}
+b -> {c,f}
+c -> {a,b,d,e,g}
+d -> {a}
+e -> {b,d}
+f -> {b,d}
+g -> {a,b,d,e,g}
+
+we now have d -> a,
+
+a -> {c,f}
+b -> {c,f}
+c -> {b,d,e,g}
+d -> {a}
+e -> {b,d}
+f -> {b,d}
+g -> {b,d,e,g}
+
+and e,f are a {b,d} pair
+
+a -> {c,f}
+b -> {c,f}
+c -> {e,g}
+d -> {a}
+e -> {b,d}
+f -> {b,d}
+g -> {e,g}
+
+consider the 3 patterns that must be 2,3,5
+
+cdfbe -> {e,g} a {b,d} {c,f} {b,d}
+gcdfa -> {e,g} {e,g} a {b,d} {c,f}
+fbcad -> {b,d} {c,f} {e,g} {c,f} a
+
+only 5 has b and d. So cdfbe is 5
+
+we need a,b,d,f,g, so no c, and no e
+
+therefore, b -> {f}, which also gives us, a -> {c}
+and, c -> {g}, which also gives us g -> {e}
+
+a -> {c}
+b -> {f}
+c -> {g}
+d -> {a}
+e -> {b,d}
+f -> {b,d}
+g -> {e}
+
+back to 2,3,5:
+
+5 - cdfbe -> ga {b,d} f {b,d}
+? - gcdfa -> ega {b,d} c
+? - fbcad -> {b,d} fgca
+
+2 needs acdeg (no f)
+3 needs acdfg (no e)
+
+so we have
+
+5 - cdfbe -> ga {b,d} f {b,d}
+2 - gcdfa -> ega {b,d} c
+3 - fbcad -> {b,d} fgca
+
+2 has d and no b, so f -> {d}, and e -> {b}
+
+5 - cdfbe -> gadfb
+2 - gcdfa -> egadc
+3 - fbcad -> dfgca
+
+final mapping:
+
+d -> a
+e -> b
+a -> c
+f -> d
+g -> e
+b -> f
+c -> g
+
+ dddd
+e    a
+e    a
+ ffff
+g    b
+g    b
+ cccc
