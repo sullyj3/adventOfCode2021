@@ -8,8 +8,10 @@ import qualified Data.Text as T
 import Flow
 import Data.Char (digitToInt)
 import Linear
+import qualified Data.Set as Set
 
 type Grid = Vector (Vector Int)
+type Point = V2 Int
 
 parseInput :: Text -> Grid
 parseInput = T.lines .>
@@ -17,27 +19,34 @@ parseInput = T.lines .>
 
 solve :: Text -> Text
 solve input = showSolutions p1 p2
-  where parsed = parseInput input
-        p1 = part1 parsed
-        p2 = part2 parsed
+  where 
+    grid = parseInput input
+    p1, p2 :: Int
+    (p1, p2) = flip runReader grid do
+      riskLevels :: [Int] <- traverse riskLevel =<< lowPoints
+
+      basinSizes <- traverse (basinSize) =<< lowPoints
+      let threeBiggest = take 3 . sortOn Down $ basinSizes
+
+      pure (sum riskLevels, product threeBiggest)
 
 testData :: IO Grid
 testData = readFileText "inputs/day09example.txt" <&> parseInput
 
-part1 :: Grid -> Int
-part1 g = sum $ riskLevel g <$> lowPoints
-  where
-    lowPoints = filter (isLowPoint g) (allCoords g)
+lowPoints :: MonadReader Grid m => m [Point]
+lowPoints = filterM (isLowPoint) =<< allCoords
 
-allCoords :: Grid -> [V2 Int]
-allCoords g = [V2 x y | x <- [0 .. width g - 1], y <- [0 .. height g - 1]]
+allCoords :: MonadReader Grid m => m [Point]
+allCoords = ask <&> \g ->
+  [V2 x y | x <- [0 .. width g - 1], y <- [0 .. height g - 1]]
 
-surrounds :: Grid -> V2 Int -> [V2 Int]
-surrounds g (V2 x y) = 
-  filter (inbounds g) [V2 (x+1) y, V2 (x-1) y, V2 x (y+1), V2 x (y-1)]
+surrounds :: MonadReader Grid m => Point -> m [Point]
+surrounds (V2 x y) =
+  filterM inbounds [V2 (x+1) y, V2 (x-1) y, V2 x (y+1), V2 x (y-1)]
 
-inbounds :: Grid -> V2 Int -> Bool
-inbounds g (V2 x y) = (0 <= x && x < width g) && (0 <=y && y < height g)
+inbounds :: MonadReader Grid m => Point -> m Bool
+inbounds (V2 x y) =
+  ask <&> \g -> (0 <= x && x < width g) && (0 <=y && y < height g)
 
 height :: Grid -> Int
 height g = V.length g
@@ -45,16 +54,40 @@ height g = V.length g
 width :: Grid -> Int
 width g = V.length $ g ! 0
 
-isLowPoint :: Grid -> V2 Int -> Bool
-isLowPoint g (V2 x y) = 
-  let val = g ! y ! x
-   in all (> val) [ g ! y' ! x' | V2 x' y' <- surrounds g (V2 x y)]
+isLowPoint :: MonadReader Grid m => Point -> m Bool
+isLowPoint pt = do
+  val <- ix pt
+  neighbourVals <- traverse ix =<< surrounds pt
+  pure $ all (> val) neighbourVals
 
-riskLevel :: Grid -> V2 Int -> Int
-riskLevel g pt = 1 + (g `ix` pt)
+riskLevel :: MonadReader Grid m => Point -> m Int
+riskLevel pt = (1 +) <$> ix pt
 
-ix :: Grid -> V2 Int -> Int
-ix g (V2 x y) = (g ! y) ! x
+ix :: MonadReader Grid m => Point -> m Int
+ix (V2 x y) = ask <&> \g -> (g ! y) ! x
 
-part2 :: Grid -> ()
-part2 = const ()
+isLowerThan :: MonadReader Grid m => Point -> Point -> m Bool
+isLowerThan a b = liftA2 (<) (ix a) (ix b)
+
+visit :: (MonadReader Grid m, MonadState (Set Point) m)
+      => Point -> m ()
+visit pt = do
+  modify (Set.insert pt)
+  neighbours <- filterM reachable =<< surrounds pt
+  for_ neighbours \neighbour ->
+    unlessM (visited neighbour) $ visit neighbour
+  where
+    reachable neighbour = do
+      currVal <- ix pt
+      neighbourVal <- ix neighbour
+      pure $ neighbourVal < 9 && neighbourVal > currVal
+
+    visited :: MonadState (Set (Point)) m => Point -> m Bool
+    visited neighbour = get <&> \visitedSet -> 
+      neighbour `Set.member` visitedSet
+
+basinSize :: MonadReader Grid m => Point -> m Int
+basinSize lowPoint = do
+  g <- ask
+  let basin = execState (runReaderT (visit lowPoint) g) mempty
+  pure $ Set.size basin
