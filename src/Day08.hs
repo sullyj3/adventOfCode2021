@@ -21,6 +21,7 @@ parseEntries = map parseEntry . T.lines
 
 numSegments :: Int -> Int
 numSegments = \case
+  0 -> 6
   1 -> 2
   2 -> 5
   3 -> 5
@@ -29,7 +30,7 @@ numSegments = \case
   6 -> 6
   7 -> 3
   8 -> 7
-  9 -> 5
+  9 -> 6
   _ -> error "bad"
 
 is147or8 :: [a] -> Bool
