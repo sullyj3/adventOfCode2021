@@ -33,7 +33,7 @@ main = do
              , (Day06.solve, "day06.txt")
              , (Day07.solve, "day07.txt")
              , (Day08.solve, "day08.txt")
-             , (Day09.solve, "day09.txt") ]
+             , (Day09.solve, "day09.txt")
              , (Day10.solve, "day10.txt") ]
 
       daysToRun :: [(Int, (Text -> Text, FilePath))]
