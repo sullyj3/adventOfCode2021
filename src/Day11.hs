@@ -3,15 +3,21 @@ module Day11 where
 import Utils (showSolutions)
 import Text.Megaparsec
 import Parsing
+import Data.Text qualified as T
+import Data.Char (digitToInt)
+import Flow
 
-parseInput :: Parser ()
-parseInput = pure ()
+type EnergyLevel = Int
+
+-- todo maybe vector? decide after reading problem
+parseInput :: Text -> [[EnergyLevel]]
+parseInput = T.lines .> map T.unpack .> map (map digitToInt)
 
 solve :: Text -> Text
-solve input = showSolutions p1 p2
-  where Just parsed = parseMaybe parseInput input
-        p1 = part1 parsed
-        p2 = part2 parsed
+solve input = showSolutions octopi p2
+  where octopi = parseInput input
+        p1 = ()
+        p2 = ()
 
 part1 :: () -> ()
 part1 = undefined
