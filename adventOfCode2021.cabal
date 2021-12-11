@@ -66,6 +66,7 @@ library
     , flow
     , hmatrix
     , linear
+    , massiv
     , megaparsec >=9.2 && < 10
     , modular-arithmetic
     , monad-loops

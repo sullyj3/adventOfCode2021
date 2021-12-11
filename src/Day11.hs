@@ -4,32 +4,34 @@ import Utils (showSolutions)
 import Data.Text qualified as T
 import Data.Char (digitToInt)
 import Flow
-import Data.Vector qualified as V
-import Data.Vector (Vector)
-import Data.Vector.Mutable qualified as MV
-import Data.Vector.Mutable (MVector)
+-- import Data.Vector qualified as V
+-- import Data.Vector (Vector)
+-- import Data.Vector.Mutable qualified as MV
+-- import Data.Vector.Mutable (MVector)
 import Linear.V2
 import Data.List (delete)
 import Control.Monad.ST
+import Data.Massiv.Core
+import Data.Massiv.Array qualified as A
+import Data.Massiv.Array (U)
 
 type EnergyLevel = Int
 
--- todo: this was a terrible idea. Don't use nested vectors for 2d arrays
-type Grid = Vector (Vector EnergyLevel)
-type MGrid s = MVector s (MVector s EnergyLevel)
+type Grid = Matrix U Int
+type MGrid s = MMatrix s U Int
 type Point = V2 Int
 
 -- todo maybe vector? decide after reading problem
-parseInput :: Text -> Grid
-parseInput = T.lines .> map T.unpack .> map (map digitToInt) .>
-  map V.fromList .> V.fromList
+parseInput :: Text -> Maybe Grid
+parseInput = T.lines .> map T.unpack .> map (map digitToInt) .> A.fromListsM Seq
 
 solve :: Text -> Text
 solve input = showSolutions octopi p2
-  where octopi = parseInput input
+  where Just octopi = parseInput input
         p1 = ()
         p2 = ()
 
+{-
 adjacent :: Point -> [Point]
 adjacent pt@(V2 x y) =
   delete pt [V2 (x+dx) (y+dy) | dx <- [-1..1], dy <- [-1..1]]
@@ -71,3 +73,4 @@ part1 = undefined
 
 part2 :: () -> ()
 part2 = undefined
+-}
