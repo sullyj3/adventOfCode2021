@@ -26,6 +26,12 @@ parseArgs =
 
 main :: IO ()
 main = do
+  graph <- Day12.exampleGraph
+  traverse_ print $
+    Day12.paths graph Day12.p2CanVisit Day12.p2Visit (mempty, False)
+
+aoc :: IO ()
+aoc = do
   toRun <- parseArgs
   let days = [ (Day01.solve, "day01.txt")
              , (Day02.solve, "day02.txt")
