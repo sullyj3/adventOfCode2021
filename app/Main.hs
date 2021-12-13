@@ -11,6 +11,7 @@ import qualified Day08
 import qualified Day09
 import qualified Day10
 import qualified Day11
+import qualified Day12
 import Data.List ((!!), last)
 
 data ToRun = Days [Int] | AllDays | Latest
@@ -36,7 +37,8 @@ main = do
              , (Day08.solve, "day08.txt")
              , (Day09.solve, "day09.txt")
              , (Day10.solve, "day10.txt")
-             , (Day11.solve, "day11.txt") ]
+             , (Day11.solve, "day11.txt")
+             , (Day12.solve, "day12.txt") ]
 
       daysToRun :: [(Int, (Text -> Text, FilePath))]
       daysToRun = case toRun of
