@@ -21,7 +21,8 @@ type EnergyLevel = Int
 type Grid r = Matrix r Int
 type MGrid s r = MMatrix s r Int
 
--- todo maybe vector? decide after reading problem
+-- NOTE Ix2 is row first (y) then column (x)
+
 parseInput :: Text -> Maybe (Grid U)
 parseInput = T.lines .> map T.unpack .> map (map digitToInt) .> A.fromListsM Seq
 
@@ -32,11 +33,11 @@ solve input = showSolutions octopi p2
         p2 = ()
 
 adjacent :: Ix2 -> [Ix2]
-adjacent pt@(Ix2 x y) =
-  delete pt [(x+dx) :. (y+dy) | dx <- [-1..1], dy <- [-1..1]]
+adjacent pt@(Ix2 y x) =
+  delete pt [(y+dy) :. (x+dx) | dx <- [-1..1], dy <- [-1..1]]
 
 inBounds :: Ix2 -> Bool
-inBounds (x :. y) = 0 <= x && x < width && 0 <= y && y < height
+inBounds (y :. x) = 0 <= x && x < width && 0 <= y && y < height
   where (width, height) = (10, 10)
 
 
@@ -44,9 +45,8 @@ increaseEnergy :: Grid U -> Grid D
 increaseEnergy = A.map succ
 
 
---
--- findGTNines :: MGrid s r -> [Ix2]
--- findGTNines = gridIMapMaybe 
+-- findGTNines :: MGrid s r -> Maybe (NonEmpty Ix2)
+-- findGTNines = nonEmpty . A.simapMaybe
 --   (\pt energy -> guard (energy > 9) >> pure pt)
 
 {-
