@@ -46,7 +46,8 @@ solve :: Text -> Text
 solve input = showSolutions p1 ()
   where Just theEdges = parseMaybe edges input
         graph = graphFromEdges theEdges
-        p1 = numPaths graph
+        p1 :: Int
+        p1 = numPaths graph p1CanVisit p1Visit mempty
         -- p2 = part2 ()
 
 -- part1 :: () -> ()
@@ -56,19 +57,28 @@ solve input = showSolutions p1 ()
 -- part2 = undefined
 type VisitedSet = Set Node
 
-numPaths :: Graph -> Int
-numPaths graph = length $ flip evalStateT mempty $ go Start
+type CanVisit s = Node -> s -> Bool
+type Visit s = Node -> s -> s
+
+p1CanVisit :: CanVisit VisitedSet
+p1CanVisit node = (node `Set.notMember`)
+
+p1Visit :: Visit VisitedSet
+p1Visit node = case node of
+  Small _ -> Set.insert node
+  Start -> Set.insert node
+  _ -> id
+
+numPaths :: forall s. Graph -> CanVisit s -> Visit s -> s -> Int
+numPaths graph canVisit visit initialState =
+  length $ flip evalStateT initialState $ go Start
   where
-    go :: Node -> StateT VisitedSet [] ()
+    go :: Node -> StateT s [] ()
     go = \case
       End -> pure ()
       node -> do
-        visited :: VisitedSet <- get
-        guard $ node `Set.notMember` visited
-        case node of
-          Small _ -> modify (Set.insert node)
-          Start -> modify (Set.insert node)
-          _ -> pass
+        guardM $ canVisit node <$> get
+        modify $ visit node
 
         neighbour <- lift $ Set.toList $ (graph !? node) ?: mempty
         go neighbour
